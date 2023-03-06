@@ -19,6 +19,10 @@ namespace Entitas
         /// Occurs when a component of an entity in the group gets replaced.
         public event GroupUpdated<TEntity> OnEntityUpdated;
 
+        public event GroupChanged<TEntity> OnEntityOnlyAdded;
+        public event GroupChanged<TEntity> OnEntityOnlyRemoved;
+
+
         /// Returns the number of entities in the group.
         public int count => _entities.Count;
 
@@ -83,8 +87,8 @@ namespace Entitas
 
         public GroupChanged<TEntity> HandleEntity(TEntity entity) =>
             _matcher.Matches(entity)
-                ? (addEntitySilently(entity) ? OnEntityAdded : null)
-                : (removeEntitySilently(entity) ? OnEntityRemoved : null);
+                ? (addEntitySilently(entity) ? OnEntityOnlyAdded + OnEntityAdded : null)
+                : (removeEntitySilently(entity) ? OnEntityOnlyRemoved + OnEntityRemoved : null);
 
         bool addEntitySilently(TEntity entity)
         {
@@ -193,7 +197,7 @@ namespace Entitas
 
         public override string ToString()
         {
-            if (_toStringCache == null) 
+            if (_toStringCache == null)
                 _toStringCache = $"Group({_matcher})";
 
             return _toStringCache;

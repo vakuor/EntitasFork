@@ -24,6 +24,9 @@ namespace Entitas
         event GroupChanged<TEntity> OnEntityRemoved;
         event GroupUpdated<TEntity> OnEntityUpdated;
 
+        event GroupChanged<TEntity> OnEntityOnlyAdded;
+        event GroupChanged<TEntity> OnEntityOnlyRemoved;
+
         IMatcher<TEntity> matcher { get; }
 
         void HandleEntitySilently(TEntity entity);

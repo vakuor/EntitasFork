@@ -5,14 +5,12 @@
     <Version>1.14.2</Version>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.CodeDom" Version="7.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="DesperateDevs.Serialization" Version="2.*" />
-    <PackageReference Include="Jenny" Version="1.*" />
-    <PackageReference Include="Jenny.Generator" Version="1.*" />
+   <ItemGroup>
+    <PackageReference Include="DesperateDevs.Reflection" Version="1.0.1" />
+    <PackageReference Include="DesperateDevs.Serialization" Version="2.0.0" />
+    <PackageReference Include="Jenny" Version="1.0.1" />
+    <PackageReference Include="Jenny.Generator" Version="1.0.0" />
+    <PackageReference Include="System.CodeDom" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -24,6 +24,15 @@ ${componentNamesList}
     public static readonly System.Type[] componentTypes = {
 ${componentTypesList}
     };
+
+    public static readonly System.Collections.Generic.Dictionary<System.Type, int> componentIndexByType = new System.Collections.Generic.Dictionary<System.Type, int>(){
+${componentTypeIndicesPairs}
+    };
+
+    public static readonly System.Collections.Generic.Dictionary<int, System.Type> componentTypeByIndex = new System.Collections.Generic.Dictionary<int, System.Type>(){
+${componentIndicesTypePairs}
+    };
+
 }
 ";
 
@@ -31,6 +40,8 @@ ${componentTypesList}
         const string TOTAL_COMPONENTS_CONSTANT_TEMPLATE = @"    public const int TotalComponents = ${totalComponents};";
         const string COMPONENT_NAME_TEMPLATE = @"        ""${ComponentName}""";
         const string COMPONENT_TYPE_TEMPLATE = @"        typeof(${ComponentType})";
+
+        const string PAIR_TEMPLATE = @"        { ${PairKey}, ${PairValue} }";
 
         public override CodeGenFile[] Generate(CodeGeneratorData[] data)
         {
@@ -103,12 +114,26 @@ ${componentTypesList}
             var componentTypesList = string.Join(",\n", data
                 .Select(d => COMPONENT_TYPE_TEMPLATE.Replace("${ComponentType}", d.GetTypeName())));
 
+            var componentTypeIndicesPairs = string.Join(",\n", data
+                    .Select((d, index) => PAIR_TEMPLATE
+                            .Replace("${PairKey}", COMPONENT_TYPE_TEMPLATE.Replace("${ComponentType}", d.GetTypeName()))
+                            .Replace("${PairValue}", index.ToString())
+                    ).ToArray());
+
+            var componentIndicesTypePairs = string.Join(",\n", data
+                    .Select((d, index) => PAIR_TEMPLATE
+                            .Replace("${PairKey}", index.ToString())
+                            .Replace("${PairValue}", COMPONENT_TYPE_TEMPLATE.Replace("${ComponentType}", d.GetTypeName()))
+                    ).ToArray());
+
             var fileContent = TEMPLATE
                 .Replace("${Lookup}", contextName + CodeGeneratorExtensions.LOOKUP)
                 .Replace("${componentConstantsList}", componentConstantsList)
                 .Replace("${totalComponentsConstant}", totalComponentsConstant)
                 .Replace("${componentNamesList}", componentNamesList)
-                .Replace("${componentTypesList}", componentTypesList);
+                .Replace("${componentTypesList}", componentTypesList)
+                .Replace("${componentTypeIndicesPairs}", componentTypeIndicesPairs)
+                .Replace("${componentIndicesTypePairs}", componentIndicesTypePairs);
 
             return new CodeGenFile(
                 contextName + Path.DirectorySeparatorChar +
